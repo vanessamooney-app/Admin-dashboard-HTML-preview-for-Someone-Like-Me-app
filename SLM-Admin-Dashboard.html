@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Someone Like Me — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#4F9EA3;--deep:#3A878D;--coral:#F06F4F;--yellow:#F2C230;
+  --cream:#F6F3EE;--text:#35565A;--light:#EFEFEF;--white:#fff;
+  --success:#4caf8a;--danger:#e05252;--sidebar:230px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#eae7e1;color:var(--text);min-height:100vh;display:flex;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--deep);min-height:100vh;position:fixed;top:0;left:0;z-index:100;display:flex;flex-direction:column;}
+.s-logo{padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,.1);}
+.s-logo .brand{font-size:14px;font-weight:700;color:#fff;}
+.s-logo .brand span{color:var(--yellow);}
+.s-logo .sub{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:3px;}
+.s-nav{flex:1;padding:14px 0;}
+.s-section{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:14px 20px 5px;font-weight:600;}
+.s-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:12.5px;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:all .15s;}
+.s-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.s-item.active{background:rgba(255,255,255,.13);color:#fff;border-left-color:var(--yellow);font-weight:500;}
+.s-item .ic{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
+.s-foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;color:rgba(255,255,255,.3);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;min-height:100vh;}
+.topbar{background:#fff;height:58px;padding:0 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--light);position:sticky;top:0;z-index:50;}
+.topbar h1{font-size:15px;font-weight:600;}
+.content{padding:26px 30px 60px;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:#fff;border-radius:13px;padding:15px 18px;box-shadow:0 1px 6px rgba(53,86,90,.06);}
+.stat-card .sl{font-size:10px;color:#99bbbe;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:5px;}
+.stat-card .sv{font-size:28px;font-weight:700;color:var(--text);line-height:1;}
+.stat-card .ss{font-size:10px;color:#bbb;margin-top:3px;}
+.sc-t{border-top:3px solid var(--teal);}
+.sc-c{border-top:3px solid var(--coral);}
+.sc-y{border-top:3px solid var(--yellow);}
+.sc-g{border-top:3px solid var(--success);}
+
+/* PANEL */
+.panel{background:#fff;border-radius:14px;box-shadow:0 1px 8px rgba(53,86,90,.07);margin-bottom:22px;overflow:hidden;}
+.panel-hd{padding:16px 22px;border-bottom:1px solid var(--light);display:flex;align-items:center;justify-content:space-between;}
+.panel-hd h2{font-size:14px;font-weight:600;}
+.panel-hd .phr{display:flex;gap:8px;align-items:center;}
+.panel-body{padding:20px 22px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all .15s;white-space:nowrap;}
+.btn-primary{background:var(--teal);color:#fff;}
+.btn-primary:hover{background:var(--deep);}
+.btn-outline{background:#fff;color:var(--text);border:1.5px solid var(--light);}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal);}
+.btn-danger{background:#fff2f2;color:var(--danger);border:1.5px solid #ffdada;}
+.btn-sm{padding:6px 13px;font-size:11.5px;}
+.btn-xs{padding:4px 10px;font-size:11px;}
+.btn-teal-ghost{background:none;border:none;color:var(--teal);font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;cursor:pointer;padding:6px 0;}
+.btn-teal-ghost:hover{text-decoration:underline;}
+
+/* FORMS */
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--text);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 13px;border:1.5px solid #e8e5e0;border-radius:9px;font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--text);background:#fff;outline:none;transition:border-color .15s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--teal);}
+.form-textarea{min-height:72px;resize:vertical;}
+.form-hint{font-size:10px;color:#b0b0b0;margin-top:3px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* SEARCH */
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--cream);border-radius:9px;padding:8px 13px;border:1.5px solid transparent;margin-bottom:14px;transition:border-color .15s;}
+.search-wrap:focus-within{border-color:var(--teal);background:#fff;}
+.search-wrap input{border:none;background:none;font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--text);outline:none;flex:1;}
+.search-wrap input::placeholder{color:#b0c8ca;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.filter-bar label{font-size:11px;font-weight:600;color:#99bbbe;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.filter-select{padding:6px 12px;border-radius:8px;border:1.5px solid var(--light);font-family:'Poppins',sans-serif;font-size:12px;color:var(--text);background:#fff;outline:none;cursor:pointer;transition:border-color .15s;}
+.filter-select:focus{border-color:var(--teal);}
+
+/* ITEM CARD */
+.item-card{border:1.5px solid #f0ece6;border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:13px;transition:border-color .15s,box-shadow .15s;}
+.item-card:hover{border-color:var(--teal);box-shadow:0 2px 14px rgba(79,158,163,.1);}
+.item-thumb{width:46px;height:46px;border-radius:9px;background:var(--cream);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:19px;overflow:hidden;border:1px solid var(--light);}
+.item-thumb img{width:100%;height:100%;object-fit:cover;border-radius:9px;}
+.item-info{flex:1;min-width:0;}
+.item-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px;}
+.item-title{font-size:13.5px;font-weight:600;}
+.item-sub{font-size:11.5px;color:#8aacaf;line-height:1.5;}
+.item-link{font-size:10.5px;color:var(--teal);margin-top:3px;display:inline-block;}
+.item-actions{display:flex;gap:6px;flex-shrink:0;align-items:center;padding-top:1px;}
+.drag-h{color:#d0ccc6;cursor:grab;font-size:15px;align-self:center;flex-shrink:0;}
+.drag-h:hover{color:var(--teal);}
+
+/* BADGES & TAGS */
+.badge{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;}
+.badge-live{background:#e5f7ef;color:#3a9e6f;}
+.badge-draft{background:#fef8e0;color:#b8860b;}
+.tag{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:500;flex-shrink:0;}
+.tag-cat{background:#e8f4f5;color:var(--teal);}
+.tag-type{background:#f0f0f0;color:#888;}
+.tag-rss{background:#fff3e0;color:#e57c00;font-size:9.5px;padding:2px 7px;border-radius:8px;font-weight:600;}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed #e0dcd6;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:var(--cream);transition:all .15s;}
+.upload-zone:hover{border-color:var(--teal);background:#eaf5f6;}
+.uz-icon{font-size:26px;margin-bottom:5px;}
+.upload-zone p{font-size:11px;color:#99bbbe;}
+
+/* RSS BOX */
+.rss-box{background:var(--cream);border:1.5px solid var(--light);border-radius:12px;padding:16px;margin-bottom:16px;}
+.rss-status{display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px 13px;background:#fff;border-radius:9px;border:1.5px solid var(--light);}
+.rss-status .rss-art{width:38px;height:38px;border-radius:7px;object-fit:cover;flex-shrink:0;}
+.rss-status .rss-info{flex:1;}
+.rss-status .rss-name{font-size:12px;font-weight:600;}
+.rss-status .rss-meta{font-size:10.5px;color:#8aacaf;}
+.rss-dot{width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;}
+.rss-dot.orange{background:var(--yellow);}
+
+/* EPISODE SUB-ITEM */
+.ep-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:var(--cream);margin-bottom:6px;}
+.ep-num{font-size:10px;font-weight:700;color:#99bbbe;width:22px;text-align:center;flex-shrink:0;}
+.ep-info{flex:1;}
+.ep-info .et{font-size:12px;font-weight:500;color:var(--text);}
+.ep-info .es{font-size:10.5px;color:#8aacaf;}
+.ep-tag{font-size:9.5px;padding:2px 7px;border-radius:7px;background:#e8f4f5;color:var(--teal);font-weight:500;flex-shrink:0;}
+
+/* COLOR SWATCHES */
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.swatch{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;}
+.swatch:hover,.swatch.active{border-color:var(--text);transform:scale(1.12);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(30,52,55,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 64px rgba(0,0,0,.2);transform:translateY(14px);transition:transform .2s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-hd{padding:20px 24px 16px;border-bottom:1px solid var(--light);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;}
+.modal-hd h3{font-size:15px;font-weight:600;}
+.modal-x{background:none;border:none;font-size:22px;cursor:pointer;color:#bbb;line-height:1;padding:0 2px;}
+.modal-x:hover{color:var(--text);}
+.modal-body{padding:20px 24px;}
+.modal-ft{padding:14px 24px;border-top:1px solid var(--light);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:#fff;}
+
+/* INFO BOX */
+.info-box{background:#f0f9fa;border:1.5px solid #c8e8ea;border-radius:10px;padding:12px 14px;font-size:11.5px;color:var(--deep);line-height:1.6;margin-bottom:16px;}
+.info-box strong{font-weight:600;}
+
+/* CONFIRM */
+.confirm-overlay{position:fixed;inset:0;background:rgba(30,52,55,.45);z-index:250;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.confirm-overlay.open{opacity:1;pointer-events:all;}
+.confirm-box{background:#fff;border-radius:16px;padding:28px 26px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.15);}
+.confirm-box .ci{font-size:36px;margin-bottom:10px;}
+.confirm-box h3{font-size:15px;font-weight:600;margin-bottom:6px;}
+.confirm-box p{font-size:12px;color:#8aacaf;margin-bottom:20px;line-height:1.55;}
+.confirm-btns{display:flex;gap:10px;justify-content:center;}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;right:26px;background:var(--deep);color:#fff;padding:11px 20px;border-radius:10px;font-size:12px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:300;transform:translateY(14px);opacity:0;transition:all .3s;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* BANNER CARD */
+.banner-card{border:1.5px solid #f0ece6;border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.banner-img-area{height:78px;display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,.8);font-weight:500;}
+.banner-meta{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;}
+.banner-meta .bm-name{font-size:13px;font-weight:600;}
+.banner-meta .bm-sub{font-size:11px;color:#8aacaf;margin-top:1px;display:flex;align-items:center;gap:6px;}
+
+/* SECTION VISIBILITY */
+.section{display:none;}
+.section.active{display:block;}
+
+/* EMPTY */
+.empty{text-align:center;padding:36px 20px;color:#c0bcb6;}
+.empty .ei{font-size:34px;margin-bottom:8px;}
+.empty p{font-size:12.5px;}
+
+/* MANAGE CATS PANEL */
+.cat-manage-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.cat-manage-item{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:var(--cream);border-radius:9px;font-size:12.5px;}
+.cat-manage-item span{display:flex;align-items:center;gap:7px;}
+.add-cat-inline{display:flex;gap:8px;align-items:center;}
+.add-cat-inline input{flex:1;padding:7px 12px;border:1.5px solid var(--light);border-radius:8px;font-family:'Poppins',sans-serif;font-size:12px;outline:none;}
+.add-cat-inline input:focus{border-color:var(--teal);}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="brand">Someone <span>Like Me</span></div>
+    <div class="sub">Admin Panel</div>
+  </div>
+  <nav class="s-nav">
+    <div class="s-section">Content</div>
+    <div class="s-item active" onclick="go('directory',this)"><span class="ic">🏥</span> Cancer Care Support</div>
+    <div class="s-item" onclick="go('podcasts',this)"><span class="ic">🎙</span> Podcasts</div>
+    <div class="s-item" onclick="go('resources',this)"><span class="ic">📚</span> Useful Resources</div>
+    <div class="s-item" onclick="go('banners',this)"><span class="ic">🖼</span> Banner Ads</div>
+    <div class="s-section">Platform</div>
+    <div class="s-item"><span class="ic">📖</span> Stories</div>
+    <div class="s-item"><span class="ic">👥</span> Members</div>
+    <div class="s-section">Settings</div>
+    <div class="s-item"><span class="ic">⚙️</span> Settings</div>
+  </nav>
+  <div class="s-foot">Logged in as Vanessa ✦</div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="topbar-title">Cancer Care Support — Directory</h1>
+    <div id="topbar-actions"></div>
+  </div>
+  <div class="content">
+
+    <!-- ═══════════ DIRECTORY ═══════════ -->
+    <div id="section-directory" class="section active">
+      <div class="stats-row">
+        <div class="stat-card sc-t"><div class="sl">Total Listings</div><div class="sv" id="st-biz">0</div><div class="ss">businesses</div></div>
+        <div class="stat-card sc-g"><div class="sl">Live</div><div class="sv" id="st-live">0</div><div class="ss">published</div></div>
+        <div class="stat-card sc-y"><div class="sl">Draft</div><div class="sv" id="st-draft">0</div><div class="ss">hidden</div></div>
+        <div class="stat-card sc-c"><div class="sl">Categories</div><div class="sv" id="st-cats">0</div><div class="ss">types</div></div>
+      </div>
+
+      <!-- Manage Categories -->
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Manage Categories</h2>
+          <button class="btn btn-outline btn-sm" onclick="toggleCatPanel('dir-cat-panel')">+ Add Category</button>
+        </div>
+        <div class="panel-body" id="dir-cat-panel" style="display:none;">
+          <div class="cat-manage-list" id="dir-cat-list"></div>
+          <div class="add-cat-inline">
+            <input id="new-dir-cat" placeholder="New category name…" onkeydown="if(event.key==='Enter')addDirCat()">
+            <button class="btn btn-primary btn-sm" onclick="addDirCat()">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Listings -->
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Business Listings</h2>
+          <button class="btn btn-primary btn-sm" onclick="openBizModal()">+ Add Business</button>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+            <div class="search-wrap" style="flex:1;min-width:200px;margin-bottom:0;">
+              <span style="color:#b0c8ca">🔍</span>
+              <input id="biz-search" placeholder="Search listings…" oninput="renderBiz()">
+            </div>
+            <div class="filter-bar" style="margin-bottom:0;">
+              <label>Filter:</label>
+              <select class="filter-select" id="biz-cat-filter" onchange="renderBiz()">
+                <option value="all">All Categories</option>
+              </select>
+              <select class="filter-select" id="biz-status-filter" onchange="renderBiz()">
+                <option value="all">All Status</option>
+                <option value="live">Live</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
+          <div id="biz-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PODCASTS ═══════════ -->
+    <div id="section-podcasts" class="section">
+
+      <!-- RSS Feeds -->
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Podcast RSS Feeds</h2>
+          <button class="btn btn-primary btn-sm" onclick="openRssModal()">+ Add RSS Feed</button>
+        </div>
+        <div class="panel-body">
+          <div class="info-box">
+            <strong>How RSS works:</strong> Paste your podcast RSS feed URL (from Spotify for Podcasters, Buzzsprout, Anchor, etc.). The app will automatically pull in your cover image and all episodes — and update in real time when you publish new ones.
+          </div>
+          <div id="rss-list"></div>
+        </div>
+      </div>
+
+      <!-- Episodes -->
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Episodes</h2>
+          <span style="font-size:11px;color:#8aacaf;">Auto-imported from RSS · Updates automatically</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+            <div class="search-wrap" style="flex:1;min-width:200px;margin-bottom:0;">
+              <span style="color:#b0c8ca">🔍</span>
+              <input id="ep-search" placeholder="Search episodes…" oninput="renderEpisodes()">
+            </div>
+            <div class="filter-bar" style="margin-bottom:0;">
+              <label>Cancer type:</label>
+              <select class="filter-select" id="ep-cancer-filter" onchange="renderEpisodes()">
+                <option value="all">All types</option>
+                <option>Breast Cancer</option>
+                <option>Lung Cancer</option>
+                <option>Colorectal Cancer</option>
+                <option>Cervical Cancer</option>
+                <option>Ovarian Cancer</option>
+                <option>Prostate Cancer</option>
+                <option>Skin Cancer</option>
+                <option>Blood Cancer</option>
+                <option>General / All Types</option>
+              </select>
+            </div>
+          </div>
+          <div id="ep-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ RESOURCES ═══════════ -->
+    <div id="section-resources" class="section">
+      <div class="stats-row">
+        <div class="stat-card sc-t"><div class="sl">Total Resources</div><div class="sv" id="st-res">0</div><div class="ss">links</div></div>
+        <div class="stat-card sc-g"><div class="sl">Live</div><div class="sv" id="st-res-live">0</div><div class="ss">published</div></div>
+        <div class="stat-card sc-y"><div class="sl">Draft</div><div class="sv" id="st-res-draft">0</div><div class="ss">hidden</div></div>
+        <div class="stat-card sc-c"><div class="sl">Categories</div><div class="sv" id="st-res-cats">0</div><div class="ss">topics</div></div>
+      </div>
+
+      <!-- Manage Categories -->
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Manage Categories</h2>
+          <button class="btn btn-outline btn-sm" onclick="toggleCatPanel('res-cat-panel')">+ Add Category</button>
+        </div>
+        <div class="panel-body" id="res-cat-panel" style="display:none;">
+          <div class="cat-manage-list" id="res-cat-list"></div>
+          <div class="add-cat-inline">
+            <input id="new-res-cat" placeholder="New category name…" onkeydown="if(event.key==='Enter')addResCat()">
+            <button class="btn btn-primary btn-sm" onclick="addResCat()">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Resource Links</h2>
+          <button class="btn btn-primary btn-sm" onclick="openResModal()">+ Add Resource</button>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+            <div class="search-wrap" style="flex:1;min-width:200px;margin-bottom:0;">
+              <span style="color:#b0c8ca">🔍</span>
+              <input id="res-search" placeholder="Search resources…" oninput="renderRes()">
+            </div>
+            <div class="filter-bar" style="margin-bottom:0;">
+              <label>Category:</label>
+              <select class="filter-select" id="res-cat-filter" onchange="renderRes()">
+                <option value="all">All Categories</option>
+              </select>
+            </div>
+          </div>
+          <div id="res-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ BANNERS ═══════════ -->
+    <div id="section-banners" class="section">
+      <div class="panel">
+        <div class="panel-hd">
+          <h2>Banner Ads</h2>
+          <button class="btn btn-primary btn-sm" onclick="openBannerModal()">+ Add Banner</button>
+        </div>
+        <div class="panel-body">
+          <p style="font-size:12px;color:#8aacaf;margin-bottom:16px;">Banners appear at the top of their assigned app section. Upload an image or choose a brand colour.</p>
+          <div id="banner-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════ MODALS ════════════════════ -->
+
+<!-- BIZ MODAL -->
+<div class="modal-overlay" id="biz-modal" onclick="outerClose(event,'biz-modal')">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="biz-modal-title">Add Business</h3><button class="modal-x" onclick="closeModal('biz-modal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="biz-id">
+      <div class="form-group">
+        <label class="form-label">Logo</label>
+        <div class="upload-zone" onclick="document.getElementById('biz-logo-inp').click()">
+          <img id="biz-logo-img" style="width:60px;height:60px;border-radius:10px;object-fit:cover;display:none;margin:0 auto 6px;">
+          <div id="biz-logo-ph"><div class="uz-icon">🖼</div><p>Click to upload logo</p></div>
+        </div>
+        <input type="file" id="biz-logo-inp" accept="image/*" style="display:none" onchange="imgPick('biz-logo-inp','biz-logo-img','biz-logo-ph','biz')">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Business Name *</label>
+        <input class="form-input" id="biz-name" placeholder="e.g. Spectrum Health">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" id="biz-cat-sel"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Short Description *</label>
+        <textarea class="form-textarea" id="biz-desc" placeholder="1–2 warm sentences about what they offer…"></textarea>
+        <div class="form-hint">This appears under the business name in the app.</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Website URL *</label>
+          <input class="form-input" id="biz-url" placeholder="https://www.example.ie">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="biz-status">
+            <option value="live">Live — visible in app</option>
+            <option value="draft">Draft — hidden</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-outline" onclick="closeModal('biz-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBiz()">Save Listing</button>
+    </div>
+  </div>
+</div>
+
+<!-- RSS MODAL -->
+<div class="modal-overlay" id="rss-modal" onclick="outerClose(event,'rss-modal')">
+  <div class="modal">
+    <div class="modal-hd"><h3>Add Podcast RSS Feed</h3><button class="modal-x" onclick="closeModal('rss-modal')">×</button></div>
+    <div class="modal-body">
+      <div class="info-box">
+        <strong>Where to find your RSS URL:</strong><br>
+        Spotify for Podcasters → Settings → RSS feed<br>
+        Buzzsprout → Directories → RSS feed URL<br>
+        Anchor → Settings → RSS feed
+      </div>
+      <div class="form-group">
+        <label class="form-label">Podcast Name *</label>
+        <input class="form-input" id="rss-pod-name" placeholder="e.g. Someone Like Me Podcast">
+      </div>
+      <div class="form-group">
+        <label class="form-label">RSS Feed URL *</label>
+        <input class="form-input" id="rss-url" placeholder="https://feeds.buzzsprout.com/your-feed.rss">
+        <div class="form-hint">The app will automatically pull your cover image and all episodes from this URL.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Default Cancer Type Tag</label>
+        <select class="form-select" id="rss-cancer-type">
+          <option value="General / All Types">General / All Types</option>
+          <option>Breast Cancer</option>
+          <option>Lung Cancer</option>
+          <option>Colorectal Cancer</option>
+          <option>Cervical Cancer</option>
+          <option>Ovarian Cancer</option>
+          <option>Prostate Cancer</option>
+          <option>Skin Cancer</option>
+          <option>Blood Cancer</option>
+        </select>
+        <div class="form-hint">Users can filter episodes by cancer type in the app. You can override this per episode.</div>
+      </div>
+      <div id="rss-fetch-status" style="display:none;"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-outline" onclick="closeModal('rss-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRss()">Connect Feed</button>
+    </div>
+  </div>
+</div>
+
+<!-- EPISODE TAG MODAL -->
+<div class="modal-overlay" id="ep-modal" onclick="outerClose(event,'ep-modal')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-hd"><h3>Edit Episode Tags</h3><button class="modal-x" onclick="closeModal('ep-modal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="ep-edit-id">
+      <div class="form-group">
+        <label class="form-label">Episode Title</label>
+        <div id="ep-edit-title" style="font-size:13px;font-weight:500;color:var(--text);padding:9px 0;"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cancer Type Tag</label>
+        <select class="form-select" id="ep-cancer-type">
+          <option value="General / All Types">General / All Types</option>
+          <option>Breast Cancer</option>
+          <option>Lung Cancer</option>
+          <option>Colorectal Cancer</option>
+          <option>Cervical Cancer</option>
+          <option>Ovarian Cancer</option>
+          <option>Prostate Cancer</option>
+          <option>Skin Cancer</option>
+          <option>Blood Cancer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Visibility</label>
+        <select class="form-select" id="ep-status">
+          <option value="live">Live</option>
+          <option value="draft">Draft</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-outline" onclick="closeModal('ep-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEpEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCE MODAL -->
+<div class="modal-overlay" id="res-modal" onclick="outerClose(event,'res-modal')">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="res-modal-title">Add Resource</h3><button class="modal-x" onclick="closeModal('res-modal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="res-id">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input class="form-input" id="res-title" placeholder="e.g. Returning to Work After Cancer Treatment">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" id="res-cat-sel"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Short Description</label>
+        <textarea class="form-textarea" id="res-desc" placeholder="Briefly describe what someone will find at this link…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Web Link (URL) *</label>
+        <input class="form-input" id="res-url" placeholder="https://www.example.ie/resource">
+        <div class="form-hint">Web links only — no file uploads or article content.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="res-status">
+          <option value="live">Live — visible in app</option>
+          <option value="draft">Draft — hidden</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-outline" onclick="closeModal('res-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRes()">Save Resource</button>
+    </div>
+  </div>
+</div>
+
+<!-- BANNER MODAL -->
+<div class="modal-overlay" id="banner-modal" onclick="outerClose(event,'banner-modal')">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="banner-modal-title">Add Banner Ad</h3><button class="modal-x" onclick="closeModal('banner-modal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="banner-id">
+      <div class="form-group">
+        <label class="form-label">Banner Image</label>
+        <div class="upload-zone" onclick="document.getElementById('banner-inp').click()">
+          <img id="banner-img-prev" style="width:100%;max-height:80px;object-fit:cover;border-radius:8px;display:none;margin-bottom:6px;">
+          <div id="banner-img-ph"><div class="uz-icon">🖼</div><p>Upload banner image (recommended 800×200px)</p></div>
+        </div>
+        <input type="file" id="banner-inp" accept="image/*" style="display:none" onchange="imgPick('banner-inp','banner-img-prev','banner-img-ph','banner')">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Background Colour (if no image)</label>
+        <div class="swatches" id="banner-swatches">
+          <div class="swatch active" style="background:#4F9EA3" data-c="#4F9EA3" onclick="pickSwatch(this,'banner-swatches','banner-color')"></div>
+          <div class="swatch" style="background:#F06F4F" data-c="#F06F4F" onclick="pickSwatch(this,'banner-swatches','banner-color')"></div>
+          <div class="swatch" style="background:#F2C230" data-c="#F2C230" onclick="pickSwatch(this,'banner-swatches','banner-color')"></div>
+          <div class="swatch" style="background:#3A878D" data-c="#3A878D" onclick="pickSwatch(this,'banner-swatches','banner-color')"></div>
+          <div class="swatch" style="background:#35565A" data-c="#35565A" onclick="pickSwatch(this,'banner-swatches','banner-color')"></div>
+        </div>
+        <input type="hidden" id="banner-color" value="#4F9EA3">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Advertiser Name *</label>
+          <input class="form-input" id="banner-name" placeholder="e.g. Vhi Healthcare">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Appears In</label>
+          <select class="form-select" id="banner-section">
+            <option value="all">All Sections</option>
+            <option value="directory">Cancer Care Support</option>
+            <option value="podcasts">Podcasts</option>
+            <option value="resources">Resources</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Link URL</label>
+          <input class="form-input" id="banner-url" placeholder="https://www.example.ie">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="banner-status">
+            <option value="live">Live</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-outline" onclick="closeModal('banner-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBanner()">Save Banner</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="ci">🗑</div>
+    <h3>Remove this?</h3>
+    <p>It'll be removed from the app. You can always add it back later.</p>
+    <div class="confirm-btns">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" onclick="doDelete()">Yes, remove</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════ DATA ═══════════════════
+let dirCats = [
+  'Counselling',
+  'Menopause after cancer',
+  'Rehabilitation after cancer',
+  'Nutrition and diet',
+  'Hair and recovery products',
+];
+let resCats = [
+  'How to talk to your kids',
+  'Returning to work after cancer',
+  'Side effects of chemo',
+  'Surgery tips',
+  'Financial support in Ireland',
+];
+let bizzes = [
+  {id:'b1',name:'Counselling Online Ireland',cat:'Counselling',desc:'Professional online counselling for cancer patients and survivors.',url:'https://counsellingonline.ie',status:'live',logo:'',init:'CO'},
+  {id:'b2',name:'Spectrum Health',cat:'Menopause after cancer',desc:'Specialist menopause & hormonal health support tailored for survivors.',url:'https://spectrumhealth.ie',status:'live',logo:'',init:'SH'},
+  {id:'b3',name:'Roches Pharmacy',cat:'Nutrition and diet',desc:'Expert nutrition guidance for cancer recovery.',url:'https://roches.ie',status:'live',logo:'',init:'RP'},
+  {id:'b4',name:'Cancer Rehabilitation Ireland',cat:'Rehabilitation after cancer',desc:'Evidence-based rehab programmes for cancer patients.',url:'https://cancerrehab.ie',status:'live',logo:'',init:'CR'},
+  {id:'b5',name:'The Menopause Hub',cat:'Menopause after cancer',desc:"Ireland's dedicated menopause clinic for specialist care.",url:'https://themenopausehub.ie',status:'live',logo:'',init:'MH'},
+  {id:'b6',name:'Orla Walsh Nutrition',cat:'Nutrition and diet',desc:'Leading Irish dietitian for personalised nutrition support.',url:'https://orlawalsh.ie',status:'draft',logo:'',init:'OW'},
+  {id:'b7',name:'Hair Club Ireland',cat:'Hair and recovery products',desc:'Hair & scalp care for those in cancer treatment.',url:'https://hairclub.ie',status:'draft',logo:'',init:'HC'},
+];
+let rssFeeds = [
+  {id:'f1',name:'Someone Like Me Podcast',url:'https://feeds.buzzsprout.com/someonelikeme.rss',cancerType:'Breast Cancer',connected:true,art:'',episodes:4},
+];
+let episodes = [
+  {id:'e1',feedId:'f1',title:'Finding Hope After Diagnosis',dur:'38 min',date:'12 Mar 2025',cancerType:'Breast Cancer',status:'live'},
+  {id:'e2',feedId:'f1',title:"Navigating Chemo — What No One Tells You",dur:'52 min',date:'28 Mar 2025',cancerType:'General / All Types',status:'live'},
+  {id:'e3',feedId:'f1',title:'Menopause & Cancer: The Hidden Impact',dur:'44 min',date:'14 Apr 2025',cancerType:'Breast Cancer',status:'live'},
+  {id:'e4',feedId:'f1',title:'Rebuilding Your Identity After Treatment',dur:'31 min',date:'02 May 2025',cancerType:'General / All Types',status:'live'},
+];
+let resources = [
+  {id:'r1',title:"Going Back to Work After Cancer",cat:'Returning to work after cancer',desc:'Your rights, reasonable adjustments, and how to have the conversation with your employer.',url:'https://cancersupport.ie/work',status:'live'},
+  {id:'r2',title:'Managing Chemo Side Effects',cat:'Side effects of chemo',desc:'What to expect, what helps, and when to call your nurse.',url:'https://ncri.ie/chemo',status:'live'},
+  {id:'r3',title:"How to Talk to Your Kids About Cancer",cat:'How to talk to your kids',desc:'Age-appropriate guidance from toddlers to teenagers.',url:'https://mariekeating.ie/kids',status:'live'},
+  {id:'r4',title:'Financial Support in Ireland',cat:'Financial support in Ireland',desc:'Benefits, grants, and supports available to patients and families.',url:'https://gov.ie/cancer-support',status:'live'},
+  {id:'r5',title:'DIEP Flap Surgery — What to Expect',cat:'Surgery tips',desc:'Everything you need to know before and after reconstruction surgery.',url:'https://breastcancer.ie/surgery',status:'draft'},
+];
+let banners = [
+  {id:'bn1',name:'Vhi Healthcare',section:'directory',status:'live',color:'#4F9EA3',img:'',url:''},
+  {id:'bn2',name:'Breast Cancer Ireland',section:'all',status:'live',color:'#F06F4F',img:'',url:''},
+  {id:'bn3',name:'Novartis Ireland',section:'resources',status:'draft',color:'#3A878D',img:'',url:''},
+];
+let pendingImg = {};
+let deleteCb = null;
+
+// ═══════════════════ NAVIGATION ═══════════════════
+const sectionTitles = {
+  directory:'Cancer Care Support — Directory',
+  podcasts:'Podcasts',
+  resources:'Useful Resources',
+  banners:'Banner Ads'
+};
+function go(s, el) {
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  document.getElementById('section-'+s).classList.add('active');
+  document.querySelectorAll('.s-item').forEach(x=>x.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('topbar-title').textContent = sectionTitles[s];
+  renderAll();
+}
+
+// ═══════════════════ RENDER ═══════════════════
+function renderAll() {
+  renderDirCatList(); renderBiz(); updateDirStats();
+  renderRssList(); renderEpisodes();
+  renderResCatList(); renderRes(); updateResStats();
+  refreshFilters();
+  renderBanners();
+}
+
+// ── Directory ──
+function updateDirStats() {
+  document.getElementById('st-biz').textContent = bizzes.length;
+  document.getElementById('st-live').textContent = bizzes.filter(b=>b.status==='live').length;
+  document.getElementById('st-draft').textContent = bizzes.filter(b=>b.status==='draft').length;
+  document.getElementById('st-cats').textContent = dirCats.length;
+}
+function renderDirCatList() {
+  const w = document.getElementById('dir-cat-list'); if(!w)return; w.innerHTML='';
+  dirCats.forEach((c,i)=>{
+    const d=mk('div','cat-manage-item');
+    d.innerHTML=`<span>🏷 ${c}</span><button class="btn btn-danger btn-xs" onclick="removeDirCat(${i})">Remove</button>`;
+    w.appendChild(d);
+  });
+}
+function addDirCat() {
+  const inp=document.getElementById('new-dir-cat');
+  const val=inp.value.trim(); if(!val){toast('⚠️ Enter a category name');return;}
+  if(dirCats.includes(val)){toast('⚠️ Category already exists');return;}
+  dirCats.push(val); inp.value=''; renderAll(); toast('✅ Category added');
+}
+function removeDirCat(i) {
+  const cat=dirCats[i];
+  if(bizzes.some(b=>b.cat===cat)){toast('⚠️ Remove businesses in this category first');return;}
+  dirCats.splice(i,1); renderAll(); toast('🗑 Category removed');
+}
+function renderBiz() {
+  const w = document.getElementById('biz-list');
+  const q = (document.getElementById('biz-search')||{value:''}).value.toLowerCase();
+  const cf = (document.getElementById('biz-cat-filter')||{value:'all'}).value;
+  const sf = (document.getElementById('biz-status-filter')||{value:'all'}).value;
+  let list = bizzes;
+  if(cf!=='all') list=list.filter(b=>b.cat===cf);
+  if(sf!=='all') list=list.filter(b=>b.status===sf);
+  if(q) list=list.filter(b=>b.name.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q));
+  w.innerHTML='';
+  if(!list.length){w.innerHTML='<div class="empty"><div class="ei">🔍</div><p>No listings found</p></div>';return;}
+  list.forEach(b=>{
+    const d=mk('div','item-card');
+    d.innerHTML=`<span class="drag-h">⠿</span>
+      <div class="item-thumb">${b.logo?`<img src="${b.logo}">`:`<span style="font-size:11px;font-weight:700;color:var(--teal)">${b.init}</span>`}</div>
+      <div class="item-info">
+        <div class="item-row">
+          <span class="item-title">${b.name}</span>
+          <span class="badge badge-${b.status}">${b.status}</span>
+          <span class="tag tag-cat">${b.cat}</span>
+        </div>
+        <div class="item-sub">${b.desc}</div>
+        <a class="item-link" href="${b.url}" target="_blank">🔗 ${b.url.replace('https://','')}</a>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-outline btn-xs" onclick="openBizModal('${b.id}')">Edit</button>
+        <button class="btn btn-danger btn-xs" onclick="askDel(()=>{bizzes=bizzes.filter(x=>x.id!=='${b.id}');renderAll();})">×</button>
+      </div>`;
+    w.appendChild(d);
+  });
+}
+
+// ── Podcasts ──
+function renderRssList() {
+  const w = document.getElementById('rss-list'); w.innerHTML='';
+  if(!rssFeeds.length){w.innerHTML='<div class="empty"><div class="ei">📡</div><p>No RSS feeds connected yet. Add one above to get started.</p></div>';return;}
+  rssFeeds.forEach(f=>{
+    const epCount = episodes.filter(e=>e.feedId===f.id).length;
+    const d=mk('div','rss-status');
+    d.innerHTML=`
+      <div style="width:38px;height:38px;border-radius:7px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🎙</div>
+      <div class="rss-info">
+        <div class="rss-name">${f.name}</div>
+        <div class="rss-meta">
+          <span class="tag-rss">RSS</span>
+          ${f.url.slice(0,42)}… · ${epCount} episode${epCount!==1?'s':''} · Auto-updates ✓
+        </div>
+      </div>
+      <div class="rss-dot" title="Connected"></div>
+      <button class="btn btn-danger btn-xs" onclick="askDel(()=>{rssFeeds=rssFeeds.filter(x=>x.id!=='${f.id}');episodes=episodes.filter(e=>e.feedId!=='${f.id}');renderAll();})">Remove</button>`;
+    w.appendChild(d);
+  });
+}
+function renderEpisodes() {
+  const w = document.getElementById('ep-list');
+  const q = (document.getElementById('ep-search')||{value:''}).value.toLowerCase();
+  const cf = (document.getElementById('ep-cancer-filter')||{value:'all'}).value;
+  let list = [...episodes];
+  if(cf!=='all') list=list.filter(e=>e.cancerType===cf);
+  if(q) list=list.filter(e=>e.title.toLowerCase().includes(q));
+  w.innerHTML='';
+  if(!list.length){w.innerHTML='<div class="empty"><div class="ei">🎙</div><p>No episodes found</p></div>';return;}
+  list.forEach((e,i)=>{
+    const d=mk('div','ep-item');
+    d.innerHTML=`
+      <span class="ep-num">${i+1}</span>
+      <div class="ep-info">
+        <div class="et">${e.title}</div>
+        <div class="es">${e.dur} · ${e.date}</div>
+      </div>
+      <span class="ep-tag">${e.cancerType}</span>
+      <span class="badge badge-${e.status}" style="margin-left:4px;">${e.status}</span>
+      <button class="btn btn-outline btn-xs" style="margin-left:6px;" onclick="openEpModal('${e.id}')">Tag</button>`;
+    w.appendChild(d);
+  });
+}
+
+// ── Resources ──
+function updateResStats() {
+  document.getElementById('st-res').textContent = resources.length;
+  document.getElementById('st-res-live').textContent = resources.filter(r=>r.status==='live').length;
+  document.getElementById('st-res-draft').textContent = resources.filter(r=>r.status==='draft').length;
+  document.getElementById('st-res-cats').textContent = resCats.length;
+}
+function renderResCatList() {
+  const w = document.getElementById('res-cat-list'); if(!w)return; w.innerHTML='';
+  resCats.forEach((c,i)=>{
+    const d=mk('div','cat-manage-item');
+    d.innerHTML=`<span>🏷 ${c}</span><button class="btn btn-danger btn-xs" onclick="removeResCat(${i})">Remove</button>`;
+    w.appendChild(d);
+  });
+}
+function addResCat() {
+  const inp=document.getElementById('new-res-cat');
+  const val=inp.value.trim(); if(!val){toast('⚠️ Enter a category name');return;}
+  if(resCats.includes(val)){toast('⚠️ Category already exists');return;}
+  resCats.push(val); inp.value=''; renderAll(); toast('✅ Category added');
+}
+function removeResCat(i) {
+  const cat=resCats[i];
+  if(resources.some(r=>r.cat===cat)){toast('⚠️ Remove resources in this category first');return;}
+  resCats.splice(i,1); renderAll(); toast('🗑 Category removed');
+}
+function renderRes() {
+  const w = document.getElementById('res-list');
+  const q = (document.getElementById('res-search')||{value:''}).value.toLowerCase();
+  const cf = (document.getElementById('res-cat-filter')||{value:'all'}).value;
+  let list = resources;
+  if(cf!=='all') list=list.filter(r=>r.cat===cf);
+  if(q) list=list.filter(r=>r.title.toLowerCase().includes(q)||r.desc.toLowerCase().includes(q));
+  w.innerHTML='';
+  if(!list.length){w.innerHTML='<div class="empty"><div class="ei">📚</div><p>No resources found</p></div>';return;}
+  list.forEach(r=>{
+    const d=mk('div','item-card');
+    d.innerHTML=`<span class="drag-h">⠿</span>
+      <div class="item-thumb" style="background:#e8f4f5;font-size:20px;">🔗</div>
+      <div class="item-info">
+        <div class="item-row">
+          <span class="item-title">${r.title}</span>
+          <span class="badge badge-${r.status}">${r.status}</span>
+          <span class="tag tag-cat">${r.cat}</span>
+        </div>
+        <div class="item-sub">${r.desc}</div>
+        <a class="item-link" href="${r.url}" target="_blank">🔗 ${r.url.replace('https://','')}</a>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-outline btn-xs" onclick="openResModal('${r.id}')">Edit</button>
+        <button class="btn btn-danger btn-xs" onclick="askDel(()=>{resources=resources.filter(x=>x.id!=='${r.id}');renderAll();})">×</button>
+      </div>`;
+    w.appendChild(d);
+  });
+}
+
+// ── Banners ──
+function renderBanners() {
+  const w = document.getElementById('banner-list'); w.innerHTML='';
+  if(!banners.length){w.innerHTML='<div class="empty"><div class="ei">🖼</div><p>No banners yet</p></div>';return;}
+  banners.forEach(bn=>{
+    const d=mk('div','banner-card');
+    d.innerHTML=`
+      <div class="banner-img-area" style="background:${bn.color};">
+        ${bn.img?`<img src="${bn.img}" style="width:100%;height:78px;object-fit:cover;">`:`<span>📢 ${bn.name}</span>`}
+      </div>
+      <div class="banner-meta">
+        <div>
+          <div class="bm-name">${bn.name}</div>
+          <div class="bm-sub">Section: <strong>${bn.section}</strong> &nbsp;·&nbsp;<span class="badge badge-${bn.status}">${bn.status}</span></div>
+        </div>
+        <div style="display:flex;gap:7px;">
+          <button class="btn btn-outline btn-xs" onclick="openBannerModal('${bn.id}')">Edit</button>
+          <button class="btn btn-danger btn-xs" onclick="askDel(()=>{banners=banners.filter(x=>x.id!=='${bn.id}');renderAll();})">×</button>
+        </div>
+      </div>`;
+    w.appendChild(d);
+  });
+}
+
+// ── Filter dropdowns ──
+function refreshFilters() {
+  // biz cat filter
+  const bcf=document.getElementById('biz-cat-filter');
+  if(bcf){const cv=bcf.value;bcf.innerHTML='<option value="all">All Categories</option>'+dirCats.map(c=>`<option value="${c}">${c}</option>`).join('');bcf.value=cv;}
+  // res cat filter
+  const rcf=document.getElementById('res-cat-filter');
+  if(rcf){const cv=rcf.value;rcf.innerHTML='<option value="all">All Categories</option>'+resCats.map(c=>`<option value="${c}">${c}</option>`).join('');rcf.value=cv;}
+}
+
+// ═══════════════════ MODALS ═══════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function outerClose(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+function toggleCatPanel(id){const el=document.getElementById(id);el.style.display=el.style.display==='none'?'block':'none';}
+
+function imgPick(inpId,imgId,phId,key){
+  const file=document.getElementById(inpId).files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    pendingImg[key]=e.target.result;
+    const img=document.getElementById(imgId);img.src=e.target.result;img.style.display='block';
+    document.getElementById(phId).style.display='none';
+  };
+  r.readAsDataURL(file);
+}
+function pickSwatch(el,wid,hid){
+  document.querySelectorAll(`#${wid} .swatch`).forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(hid).value=el.dataset.c;
+}
+function setSwatchActive(wid,hid,color){
+  document.getElementById(hid).value=color;
+  document.querySelectorAll(`#${wid} .swatch`).forEach(s=>s.classList.toggle('active',s.dataset.c===color));
+}
+function resetImgPicker(imgId,phId,key){
+  document.getElementById(imgId).style.display='none';document.getElementById(imgId).src='';
+  document.getElementById(phId).style.display='block';pendingImg[key]=null;
+}
+
+// ── Biz ──
+function openBizModal(id){
+  resetImgPicker('biz-logo-img','biz-logo-ph','biz');
+  document.getElementById('biz-id').value='';
+  document.getElementById('biz-name').value='';
+  document.getElementById('biz-desc').value='';
+  document.getElementById('biz-url').value='';
+  document.getElementById('biz-status').value='live';
+  const sel=document.getElementById('biz-cat-sel');
+  sel.innerHTML=dirCats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(id){
+    const b=bizzes.find(x=>x.id===id);
+    document.getElementById('biz-modal-title').textContent='Edit Business';
+    document.getElementById('biz-id').value=b.id;
+    document.getElementById('biz-name').value=b.name;
+    sel.value=b.cat;
+    document.getElementById('biz-desc').value=b.desc;
+    document.getElementById('biz-url').value=b.url;
+    document.getElementById('biz-status').value=b.status;
+    if(b.logo){document.getElementById('biz-logo-img').src=b.logo;document.getElementById('biz-logo-img').style.display='block';document.getElementById('biz-logo-ph').style.display='none';}
+  } else document.getElementById('biz-modal-title').textContent='Add Business';
+  openModal('biz-modal');
+}
+function saveBiz(){
+  const name=v('biz-name'),cat=v('biz-cat-sel'),desc=v('biz-desc'),url=v('biz-url'),status=v('biz-status');
+  if(!name||!desc||!url){toast('⚠️ Fill in all required fields');return;}
+  const init=name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  const logo=pendingImg['biz']||'';
+  const eid=v('biz-id');
+  if(eid){const i=bizzes.findIndex(b=>b.id===eid);bizzes[i]={...bizzes[i],name,cat,desc,url,status,init,logo:logo||bizzes[i].logo};toast('✅ Listing updated');}
+  else{bizzes.push({id:'b'+Date.now(),name,cat,desc,url,status,logo,init});toast('✅ Business added');}
+  closeModal('biz-modal');renderAll();
+}
+
+// ── RSS ──
+function openRssModal(){
+  document.getElementById('rss-pod-name').value='';
+  document.getElementById('rss-url').value='';
+  document.getElementById('rss-cancer-type').value='General / All Types';
+  document.getElementById('rss-fetch-status').style.display='none';
+  openModal('rss-modal');
+}
+function saveRss(){
+  const name=v('rss-pod-name'),url=v('rss-url'),cancerType=v('rss-cancer-type');
+  if(!name||!url){toast('⚠️ Name and RSS URL required');return;}
+  if(!url.startsWith('http')){toast('⚠️ Please enter a valid URL');return;}
+  const id='f'+Date.now();
+  // Simulate fetching episodes from RSS
+  rssFeeds.push({id,name,url,cancerType,connected:true,art:'',episodes:0});
+  // Simulate auto-imported episodes
+  const sampleEps=[
+    `Ep 1 — Your First Steps with ${name}`,
+    `Ep 2 — What to Expect`,
+    `Ep 3 — Finding Support`,
+  ];
+  sampleEps.forEach((title,i)=>{
+    episodes.push({id:'e'+Date.now()+i,feedId:id,title,dur:'~30 min',date:'Auto-imported',cancerType,status:'live'});
+  });
+  closeModal('rss-modal');renderAll();
+  toast('✅ RSS feed connected — episodes imported');
+}
+
+// ── Episode tag ──
+function openEpModal(id){
+  const ep=episodes.find(e=>e.id===id);
+  document.getElementById('ep-edit-id').value=id;
+  document.getElementById('ep-edit-title').textContent=ep.title;
+  document.getElementById('ep-cancer-type').value=ep.cancerType;
+  document.getElementById('ep-status').value=ep.status;
+  openModal('ep-modal');
+}
+function saveEpEdit(){
+  const id=v('ep-edit-id');
+  const i=episodes.findIndex(e=>e.id===id);
+  episodes[i].cancerType=v('ep-cancer-type');
+  episodes[i].status=v('ep-status');
+  closeModal('ep-modal');renderAll();toast('✅ Episode updated');
+}
+
+// ── Resource ──
+function openResModal(id){
+  document.getElementById('res-id').value='';
+  document.getElementById('res-title').value='';
+  document.getElementById('res-desc').value='';
+  document.getElementById('res-url').value='';
+  document.getElementById('res-status').value='live';
+  const sel=document.getElementById('res-cat-sel');
+  sel.innerHTML=resCats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(id){
+    const r=resources.find(x=>x.id===id);
+    document.getElementById('res-modal-title').textContent='Edit Resource';
+    document.getElementById('res-id').value=r.id;
+    document.getElementById('res-title').value=r.title;
+    document.getElementById('res-desc').value=r.desc;
+    document.getElementById('res-url').value=r.url;
+    document.getElementById('res-status').value=r.status;
+    sel.value=r.cat;
+  } else document.getElementById('res-modal-title').textContent='Add Resource';
+  openModal('res-modal');
+}
+function saveRes(){
+  const title=v('res-title'),cat=v('res-cat-sel'),desc=v('res-desc'),url=v('res-url'),status=v('res-status');
+  if(!title||!url){toast('⚠️ Title and URL required');return;}
+  if(!url.startsWith('http')){toast('⚠️ Please enter a valid URL starting with https://');return;}
+  const eid=v('res-id');
+  if(eid){const i=resources.findIndex(r=>r.id===eid);resources[i]={...resources[i],title,cat,desc,url,status};toast('✅ Resource updated');}
+  else{resources.push({id:'r'+Date.now(),title,cat,desc,url,status});toast('✅ Resource added');}
+  closeModal('res-modal');renderAll();
+}
+
+// ── Banner ──
+function openBannerModal(id){
+  resetImgPicker('banner-img-prev','banner-img-ph','banner');
+  document.getElementById('banner-id').value='';
+  document.getElementById('banner-name').value='';
+  document.getElementById('banner-url').value='';
+  document.getElementById('banner-status').value='live';
+  document.getElementById('banner-section').value='all';
+  setSwatchActive('banner-swatches','banner-color','#4F9EA3');
+  if(id){
+    const b=banners.find(x=>x.id===id);
+    document.getElementById('banner-modal-title').textContent='Edit Banner';
+    document.getElementById('banner-id').value=b.id;
+    document.getElementById('banner-name').value=b.name;
+    document.getElementById('banner-url').value=b.url;
+    document.getElementById('banner-status').value=b.status;
+    document.getElementById('banner-section').value=b.section;
+    setSwatchActive('banner-swatches','banner-color',b.color);
+    if(b.img){document.getElementById('banner-img-prev').src=b.img;document.getElementById('banner-img-prev').style.display='block';document.getElementById('banner-img-ph').style.display='none';}
+  } else document.getElementById('banner-modal-title').textContent='Add Banner Ad';
+  openModal('banner-modal');
+}
+function saveBanner(){
+  const name=v('banner-name'),url=v('banner-url'),status=v('banner-status'),section=v('banner-section'),color=v('banner-color');
+  if(!name){toast('⚠️ Advertiser name required');return;}
+  const img=pendingImg['banner']||'';
+  const eid=v('banner-id');
+  if(eid){const i=banners.findIndex(b=>b.id===eid);banners[i]={...banners[i],name,url,status,section,color,img:img||banners[i].img};toast('✅ Banner updated');}
+  else{banners.push({id:'bn'+Date.now(),name,url,status,section,color,img});toast('✅ Banner added');}
+  closeModal('banner-modal');renderAll();
+}
+
+// ═══════════════════ UTILS ═══════════════════
+let deleteCbFn=null;
+function askDel(cb){deleteCbFn=cb;document.getElementById('confirm-overlay').classList.add('open');}
+function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('open');deleteCbFn=null;}
+function doDelete(){if(deleteCbFn)deleteCbFn();closeConfirm();toast('🗑 Removed');}
+function v(id){return document.getElementById(id).value.trim();}
+function mk(tag,cls){const e=document.createElement(tag);e.className=cls;return e;}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+renderAll();
+</script>
+</body>
+</html>
